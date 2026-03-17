@@ -8,7 +8,7 @@ import (
 	"github.com/debobrad579/dsa/sort"
 )
 
-func TestBinarySearch(t *testing.T) {
+func TestBubbleSort(t *testing.T) {
 	arr := []int{2, 5, 3, 7, 4, 1, 6, 8}
 	expectedArr := []int{1, 2, 3, 4, 5, 6, 7, 8}
 	sort.BubbleSort(arr)
