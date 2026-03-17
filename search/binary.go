@@ -4,7 +4,7 @@ func BinarySearch(arr []int, target int) int {
 	return search(arr, 0, len(arr)-1, target)
 }
 
-func search(arr []int, lo int, hi int, target int) int {
+func search(arr []int, lo, hi, target int) int {
 	for {
 		mid := lo + (hi-lo)/2
 		v := arr[mid]
