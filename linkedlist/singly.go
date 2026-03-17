@@ -2,6 +2,8 @@ package linkedlist
 
 import "errors"
 
+var ErrIndexOutOfRange = errors.New("index out of range")
+
 type Singly[T any] struct {
 	head *node[T]
 }
@@ -34,13 +36,13 @@ func (l *Singly[T]) Insert(val T, i int) (err error) {
 	}
 
 	if i < 0 || l.head == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode := l.head
 	for range i - 1 {
 		if currentNode.next == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 
 		currentNode = currentNode.next
@@ -52,7 +54,7 @@ func (l *Singly[T]) Insert(val T, i int) (err error) {
 
 func (l *Singly[T]) Delete(i int) (err error) {
 	if l.head == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	if i == 0 {
@@ -63,14 +65,14 @@ func (l *Singly[T]) Delete(i int) (err error) {
 	currentNode := l.head
 	for range i - 1 {
 		if currentNode.next == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 
 		currentNode = currentNode.next
 	}
 
 	if currentNode.next == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode.next = currentNode.next.next
@@ -97,13 +99,13 @@ func (l *Singly[T]) Prepend(val T) {
 
 func (l *Singly[T]) Get(i int) (val T, err error) {
 	if i < 0 || l.head == nil {
-		return val, errors.New("index out of range")
+		return val, ErrIndexOutOfRange
 	}
 
 	currentNode := l.head
 	for range i {
 		if currentNode.next == nil {
-			return val, errors.New("index out of range")
+			return val, ErrIndexOutOfRange
 		}
 
 		currentNode = currentNode.next

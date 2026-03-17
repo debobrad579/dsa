@@ -2,6 +2,8 @@ package linkedlist
 
 import "errors"
 
+var ErrEmpty = errors.New("linked list is empty")
+
 type Doubly[T any] struct {
 	head *nodeDoubly[T]
 	tail *nodeDoubly[T]
@@ -36,13 +38,13 @@ func (l *Doubly[T]) Insert(val T, i int) (err error) {
 	}
 
 	if i < 0 || l.head == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode := l.head
 	for range i - 1 {
 		if currentNode.next == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 		currentNode = currentNode.next
 	}
@@ -65,13 +67,13 @@ func (l *Doubly[T]) InsertFromEnd(val T, i int) (err error) {
 	}
 
 	if i < 0 || l.tail == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode := l.tail
 	for range i - 1 {
 		if currentNode.prev == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 		currentNode = currentNode.prev
 	}
@@ -89,7 +91,7 @@ func (l *Doubly[T]) InsertFromEnd(val T, i int) (err error) {
 
 func (l *Doubly[T]) Delete(i int) (err error) {
 	if l.head == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	if i == 0 {
@@ -105,13 +107,13 @@ func (l *Doubly[T]) Delete(i int) (err error) {
 	currentNode := l.head
 	for range i - 1 {
 		if currentNode.next == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 		currentNode = currentNode.next
 	}
 
 	if currentNode.next == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode.next = currentNode.next.next
@@ -126,7 +128,7 @@ func (l *Doubly[T]) Delete(i int) (err error) {
 
 func (l *Doubly[T]) DeleteFromEnd(i int) (err error) {
 	if l.tail == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	if i == 0 {
@@ -142,13 +144,13 @@ func (l *Doubly[T]) DeleteFromEnd(i int) (err error) {
 	currentNode := l.tail
 	for range i - 1 {
 		if currentNode.prev == nil {
-			return errors.New("index out of range")
+			return ErrIndexOutOfRange
 		}
 		currentNode = currentNode.prev
 	}
 
 	if currentNode.prev == nil {
-		return errors.New("index out of range")
+		return ErrIndexOutOfRange
 	}
 
 	currentNode.prev = currentNode.prev.prev
@@ -187,13 +189,13 @@ func (l *Doubly[T]) Prepend(val T) {
 
 func (l *Doubly[T]) Get(i int) (val T, err error) {
 	if i < 0 || l.head == nil {
-		return val, errors.New("index out of range")
+		return val, ErrIndexOutOfRange
 	}
 
 	currentNode := l.head
 	for range i {
 		if currentNode.next == nil {
-			return val, errors.New("index out of range")
+			return val, ErrIndexOutOfRange
 		}
 
 		currentNode = currentNode.next
@@ -204,13 +206,13 @@ func (l *Doubly[T]) Get(i int) (val T, err error) {
 
 func (l *Doubly[T]) GetFromEnd(i int) (val T, err error) {
 	if i < 0 || l.tail == nil {
-		return val, errors.New("index out of range")
+		return val, ErrIndexOutOfRange
 	}
 
 	currentNode := l.tail
 	for range i {
 		if currentNode.prev == nil {
-			return val, errors.New("index out of range")
+			return val, ErrIndexOutOfRange
 		}
 
 		currentNode = currentNode.prev
@@ -221,7 +223,7 @@ func (l *Doubly[T]) GetFromEnd(i int) (val T, err error) {
 
 func (l *Doubly[T]) Pop() (val T, err error) {
 	if l.tail == nil {
-		return val, errors.New("linked list is empty")
+		return val, ErrEmpty
 	}
 
 	val = l.tail.val
