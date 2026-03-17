@@ -18,6 +18,25 @@ func TestSinglyLength(t *testing.T) {
 	assert.Equal(t, 3, l.Length())
 }
 
+func TestSinglyGet(t *testing.T) {
+	var l linkedlist.Singly[int]
+	_, err := l.Get(0)
+	assert.Error(t, err)
+	l.Append(10)
+	l.Append(20)
+	l.Append(30)
+	val, err := l.Get(0)
+	assert.NoError(t, err)
+	assert.Equal(t, 10, val)
+	val, err = l.Get(2)
+	assert.NoError(t, err)
+	assert.Equal(t, 30, val)
+	_, err = l.Get(3)
+	assert.Error(t, err)
+	_, err = l.Get(-1)
+	assert.Error(t, err)
+}
+
 func TestSinglyAppend(t *testing.T) {
 	var l linkedlist.Singly[int]
 	l.Append(1)
@@ -41,25 +60,6 @@ func TestSinglyPrepend(t *testing.T) {
 	val, err = l.Get(0)
 	assert.NoError(t, err)
 	assert.Equal(t, 2, val)
-}
-
-func TestSinglyGet(t *testing.T) {
-	var l linkedlist.Singly[int]
-	_, err := l.Get(0)
-	assert.Error(t, err)
-	l.Append(10)
-	l.Append(20)
-	l.Append(30)
-	val, err := l.Get(0)
-	assert.NoError(t, err)
-	assert.Equal(t, 10, val)
-	val, err = l.Get(2)
-	assert.NoError(t, err)
-	assert.Equal(t, 30, val)
-	_, err = l.Get(3)
-	assert.Error(t, err)
-	_, err = l.Get(-1)
-	assert.Error(t, err)
 }
 
 func TestSinglyInsert(t *testing.T) {
