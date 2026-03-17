@@ -30,7 +30,7 @@ func (q *Queue[T]) Deque() (val T) {
 	head := q.head
 	q.head = head.next
 
-	if q.head == nil {
+	if q.Empty() {
 		q.tail = nil
 	}
 
