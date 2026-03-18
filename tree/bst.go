@@ -1,8 +1,12 @@
 package tree
 
-import "cmp"
+import (
+	"cmp"
 
-type BinaryTree[T cmp.Ordered] struct {
+	"github.com/debobrad579/dsa/queue"
+)
+
+type BinarySearchTree[T cmp.Ordered] struct {
 	root *binaryNode[T]
 }
 
@@ -12,12 +16,12 @@ type binaryNode[T cmp.Ordered] struct {
 	right *binaryNode[T]
 }
 
-func (bt *BinaryTree[T]) Empty() bool {
-	return bt.root == nil
+func (bst *BinarySearchTree[T]) Empty() bool {
+	return bst.root == nil
 }
 
-func (bt *BinaryTree[T]) Insert(val T) {
-	bt.root = bt.root.insert(val)
+func (bst *BinarySearchTree[T]) Insert(val T) {
+	bst.root = bst.root.insert(val)
 }
 
 func (n *binaryNode[T]) insert(val T) *binaryNode[T] {
@@ -33,8 +37,8 @@ func (n *binaryNode[T]) insert(val T) *binaryNode[T] {
 	return n
 }
 
-func (bt *BinaryTree[T]) Delete(val T) {
-	bt.root = bt.root.delete(val)
+func (bst *BinarySearchTree[T]) Delete(val T) {
+	bst.root = bst.root.delete(val)
 }
 
 func (n *binaryNode[T]) delete(val T) *binaryNode[T] {
@@ -69,8 +73,8 @@ func (n *binaryNode[T]) delete(val T) *binaryNode[T] {
 	return n
 }
 
-func (bt *BinaryTree[T]) PreOrderTraversal(callback func(val T)) {
-	bt.root.preOrderTraversal(callback)
+func (bst *BinarySearchTree[T]) PreOrderTraversal(callback func(val T)) {
+	bst.root.preOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) preOrderTraversal(callback func(val T)) {
@@ -83,8 +87,8 @@ func (n *binaryNode[T]) preOrderTraversal(callback func(val T)) {
 	n.right.preOrderTraversal(callback)
 }
 
-func (bt *BinaryTree[T]) InOrderTraversal(callback func(val T)) {
-	bt.root.inOrderTraversal(callback)
+func (bst *BinarySearchTree[T]) InOrderTraversal(callback func(val T)) {
+	bst.root.inOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) inOrderTraversal(callback func(val T)) {
@@ -97,8 +101,8 @@ func (n *binaryNode[T]) inOrderTraversal(callback func(val T)) {
 	n.right.inOrderTraversal(callback)
 }
 
-func (bt *BinaryTree[T]) PostOrderTraversal(callback func(val T)) {
-	bt.root.postOrderTraversal(callback)
+func (bst *BinarySearchTree[T]) PostOrderTraversal(callback func(val T)) {
+	bst.root.postOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) postOrderTraversal(callback func(val T)) {
@@ -109,4 +113,26 @@ func (n *binaryNode[T]) postOrderTraversal(callback func(val T)) {
 	n.left.postOrderTraversal(callback)
 	n.right.postOrderTraversal(callback)
 	callback(n.val)
+}
+
+func (bst *BinarySearchTree[T]) LevelOrderTraversal(callback func(val T)) {
+	q := queue.Queue[*binaryNode[T]]{}
+	q.Enqueue(bst.root)
+
+	for !q.Empty() {
+		n := q.Deque()
+		if n == nil {
+			continue
+		}
+
+		if n.left != nil {
+			q.Enqueue(n.left)
+		}
+
+		if n.right != nil {
+			q.Enqueue(n.right)
+		}
+
+		callback(n.val)
+	}
 }
