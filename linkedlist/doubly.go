@@ -5,8 +5,9 @@ import "errors"
 var ErrEmpty = errors.New("linked list is empty")
 
 type Doubly[T any] struct {
-	head *nodeDoubly[T]
-	tail *nodeDoubly[T]
+	head   *nodeDoubly[T]
+	tail   *nodeDoubly[T]
+	length int
 }
 
 type nodeDoubly[T any] struct {
@@ -16,19 +17,7 @@ type nodeDoubly[T any] struct {
 }
 
 func (l *Doubly[T]) Length() (i int) {
-	if l.head == nil {
-		return 0
-	}
-
-	i++
-
-	currentNode := l.head
-	for currentNode.next != nil {
-		currentNode = currentNode.next
-		i++
-	}
-
-	return i
+	return l.length
 }
 
 func (l *Doubly[T]) Insert(val T, i int) (err error) {
@@ -48,6 +37,8 @@ func (l *Doubly[T]) Insert(val T, i int) (err error) {
 		}
 		currentNode = currentNode.next
 	}
+
+	l.length++
 
 	newNode := &nodeDoubly[T]{val: val, next: currentNode.next, prev: currentNode}
 	if currentNode.next != nil {
@@ -78,6 +69,8 @@ func (l *Doubly[T]) InsertFromEnd(val T, i int) (err error) {
 		currentNode = currentNode.prev
 	}
 
+	l.length++
+
 	newNode := &nodeDoubly[T]{val: val, next: currentNode, prev: currentNode.prev}
 	if currentNode.prev != nil {
 		currentNode.prev.next = newNode
@@ -95,6 +88,7 @@ func (l *Doubly[T]) Delete(i int) (err error) {
 	}
 
 	if i == 0 {
+		l.length--
 		l.head = l.head.next
 		if l.head != nil {
 			l.head.prev = nil
@@ -116,6 +110,8 @@ func (l *Doubly[T]) Delete(i int) (err error) {
 		return ErrIndexOutOfRange
 	}
 
+	l.length--
+
 	currentNode.next = currentNode.next.next
 	if currentNode.next != nil {
 		currentNode.next.prev = currentNode
@@ -132,6 +128,7 @@ func (l *Doubly[T]) DeleteFromEnd(i int) (err error) {
 	}
 
 	if i == 0 {
+		l.length--
 		l.tail = l.tail.prev
 		if l.tail != nil {
 			l.tail.next = nil
@@ -153,6 +150,8 @@ func (l *Doubly[T]) DeleteFromEnd(i int) (err error) {
 		return ErrIndexOutOfRange
 	}
 
+	l.length--
+
 	currentNode.prev = currentNode.prev.prev
 	if currentNode.prev != nil {
 		currentNode.prev.next = currentNode
@@ -164,6 +163,8 @@ func (l *Doubly[T]) DeleteFromEnd(i int) (err error) {
 }
 
 func (l *Doubly[T]) Append(val T) {
+	l.length++
+
 	newNode := &nodeDoubly[T]{val: val, prev: l.tail}
 	if l.tail != nil {
 		l.tail.next = newNode
@@ -176,6 +177,8 @@ func (l *Doubly[T]) Append(val T) {
 }
 
 func (l *Doubly[T]) Prepend(val T) {
+	l.length++
+
 	newNode := &nodeDoubly[T]{val: val, next: l.head}
 	if l.head != nil {
 		l.head.prev = newNode
@@ -225,6 +228,8 @@ func (l *Doubly[T]) Pop() (val T, err error) {
 	if l.tail == nil {
 		return val, ErrEmpty
 	}
+
+	l.length--
 
 	val = l.tail.val
 	l.tail = l.tail.prev

@@ -5,7 +5,8 @@ import "errors"
 var ErrIndexOutOfRange = errors.New("index out of range")
 
 type Singly[T any] struct {
-	head *node[T]
+	head   *node[T]
+	length int
 }
 
 type node[T any] struct {
@@ -14,19 +15,7 @@ type node[T any] struct {
 }
 
 func (l *Singly[T]) Length() (i int) {
-	if l.head == nil {
-		return 0
-	}
-
-	i++
-
-	currentNode := l.head
-	for currentNode.next != nil {
-		currentNode = currentNode.next
-		i++
-	}
-
-	return i
+	return l.length
 }
 
 func (l *Singly[T]) Insert(val T, i int) (err error) {
@@ -48,6 +37,7 @@ func (l *Singly[T]) Insert(val T, i int) (err error) {
 		currentNode = currentNode.next
 	}
 
+	l.length++
 	currentNode.next = &node[T]{val: val, next: currentNode.next}
 	return nil
 }
@@ -58,6 +48,7 @@ func (l *Singly[T]) Delete(i int) (err error) {
 	}
 
 	if i == 0 {
+		l.length--
 		l.head = l.head.next
 		return
 	}
@@ -75,11 +66,14 @@ func (l *Singly[T]) Delete(i int) (err error) {
 		return ErrIndexOutOfRange
 	}
 
+	l.length--
 	currentNode.next = currentNode.next.next
 	return nil
 }
 
 func (l *Singly[T]) Append(val T) {
+	l.length++
+
 	if l.head == nil {
 		l.head = &node[T]{val: val}
 		return
@@ -94,6 +88,7 @@ func (l *Singly[T]) Append(val T) {
 }
 
 func (l *Singly[T]) Prepend(val T) {
+	l.length++
 	l.head = &node[T]{val: val, next: l.head}
 }
 
