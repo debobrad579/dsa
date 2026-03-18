@@ -17,83 +17,96 @@ func (bt *BinaryTree[T]) Empty() bool {
 }
 
 func (bt *BinaryTree[T]) Insert(val T) {
-	if bt.root == nil {
-		bt.root = &binaryNode[T]{val: val}
-	} else {
-		bt.root.insert(val)
-	}
+	bt.root = bt.root.insert(val)
 }
 
-func (n *binaryNode[T]) insert(val T) {
-	if val == n.val {
-		return
+func (n *binaryNode[T]) insert(val T) *binaryNode[T] {
+	if n == nil {
+		return &binaryNode[T]{val: val}
 	}
 
 	if val < n.val {
-		if n.left == nil {
-			n.left = &binaryNode[T]{val: val}
-		} else {
-			n.left.insert(val)
-		}
-	} else {
-		if n.right == nil {
-			n.right = &binaryNode[T]{val: val}
-		} else {
-			n.right.insert(val)
-		}
+		n.left = n.left.insert(val)
+	} else if val > n.val {
+		n.right = n.right.insert(val)
 	}
+	return n
+}
+
+func (bt *BinaryTree[T]) Delete(val T) {
+	bt.root = bt.root.delete(val)
+}
+
+func (n *binaryNode[T]) delete(val T) *binaryNode[T] {
+	if n == nil {
+		return nil
+	}
+
+	if val < n.val {
+		n.left = n.left.delete(val)
+		return n
+	}
+
+	if val > n.val {
+		n.right = n.right.delete(val)
+		return n
+	}
+
+	if n.right == nil {
+		return n.left
+	}
+
+	if n.left == nil {
+		return n.right
+	}
+
+	currentNode := n.right
+	for currentNode.left != nil {
+		currentNode = currentNode.left
+	}
+	n.val = currentNode.val
+	n.right = n.right.delete(currentNode.val)
+	return n
 }
 
 func (bt *BinaryTree[T]) PreOrderTraversal(callback func(val T)) {
-	if bt.root != nil {
-		bt.root.preOrderTraversal(callback)
-	}
+	bt.root.preOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) preOrderTraversal(callback func(val T)) {
+	if n == nil {
+		return
+	}
+
 	callback(n.val)
-
-	if n.left != nil {
-		n.left.preOrderTraversal(callback)
-	}
-
-	if n.right != nil {
-		n.right.preOrderTraversal(callback)
-	}
+	n.left.preOrderTraversal(callback)
+	n.right.preOrderTraversal(callback)
 }
 
 func (bt *BinaryTree[T]) InOrderTraversal(callback func(val T)) {
-	if bt.root != nil {
-		bt.root.inOrderTraversal(callback)
-	}
+	bt.root.inOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) inOrderTraversal(callback func(val T)) {
-	if n.left != nil {
-		n.left.inOrderTraversal(callback)
+	if n == nil {
+		return
 	}
 
+	n.left.inOrderTraversal(callback)
 	callback(n.val)
-
-	if n.right != nil {
-		n.right.inOrderTraversal(callback)
-	}
+	n.right.inOrderTraversal(callback)
 }
 
 func (bt *BinaryTree[T]) PostOrderTraversal(callback func(val T)) {
-	if bt.root != nil {
-		bt.root.postOrderTraversal(callback)
-	}
+	bt.root.postOrderTraversal(callback)
 }
 
 func (n *binaryNode[T]) postOrderTraversal(callback func(val T)) {
-	if n.left != nil {
-		n.left.postOrderTraversal(callback)
+	if n == nil {
+		return
 	}
 
-	if n.right != nil {
-		n.right.postOrderTraversal(callback)
-	}
-
+	n.left.postOrderTraversal(callback)
+	n.right.postOrderTraversal(callback)
 	callback(n.val)
 }

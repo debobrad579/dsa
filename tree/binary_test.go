@@ -35,20 +35,17 @@ func setupTree() tree.BinaryTree[int] {
 
 func TestPreOrderTraversal(t *testing.T) {
 	bt := setupTree()
-	result := collectInts(&bt, bt.PreOrderTraversal)
-	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, result)
+	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, collectInts(&bt, bt.PreOrderTraversal))
 }
 
 func TestInOrderTraversal(t *testing.T) {
 	bt := setupTree()
-	result := collectInts(&bt, bt.InOrderTraversal)
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, result)
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(&bt, bt.InOrderTraversal))
 }
 
 func TestPostOrderTraversal(t *testing.T) {
 	bt := setupTree()
-	result := collectInts(&bt, bt.PostOrderTraversal)
-	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, result)
+	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, collectInts(&bt, bt.PostOrderTraversal))
 }
 
 func TestTraversalEmptyTree(t *testing.T) {
@@ -64,4 +61,11 @@ func TestTraversalSingleNode(t *testing.T) {
 	assert.Equal(t, []int{42}, collectInts(&bt, bt.PreOrderTraversal))
 	assert.Equal(t, []int{42}, collectInts(&bt, bt.InOrderTraversal))
 	assert.Equal(t, []int{42}, collectInts(&bt, bt.PostOrderTraversal))
+}
+
+func TestDelete(t *testing.T) {
+	bt := setupTree()
+	bt.Delete(6)
+	bt.Delete(4)
+	assert.Equal(t, []int{1, 2, 3, 5, 7}, collectInts(&bt, bt.InOrderTraversal))
 }
