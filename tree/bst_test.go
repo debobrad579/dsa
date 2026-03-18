@@ -45,6 +45,20 @@ func TestContains(t *testing.T) {
 	assert.False(t, bst.Contains(42))
 }
 
+func TestEquals(t *testing.T) {
+	bst := setupTree()
+	bst2 := setupTree()
+	assert.True(t, bst.Equals(&bst2))
+	bst2.Insert(10)
+	assert.False(t, bst.Equals(&bst2))
+}
+
+func TestMinMax(t *testing.T) {
+	bst := setupTree()
+	assert.Equal(t, 1, bst.Min())
+	assert.Equal(t, 7, bst.Max())
+}
+
 func TestDelete(t *testing.T) {
 	bst := setupTree()
 	bst.Delete(6)
@@ -87,12 +101,4 @@ func TestTraversalSingleNode(t *testing.T) {
 	assert.Equal(t, []int{42}, collectInts(&bst, bst.InOrderTraversal))
 	assert.Equal(t, []int{42}, collectInts(&bst, bst.PostOrderTraversal))
 	assert.Equal(t, []int{42}, collectInts(&bst, bst.LevelOrderTraversal))
-}
-
-func TestEquals(t *testing.T) {
-	bst := setupTree()
-	bst2 := setupTree()
-	assert.True(t, bst.Equals(&bst2))
-	bst2.Insert(10)
-	assert.False(t, bst.Equals(&bst2))
 }

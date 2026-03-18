@@ -7,13 +7,13 @@ import (
 )
 
 type BinarySearchTree[T cmp.Ordered] struct {
-	root *binaryNode[T]
+	root *bstNode[T]
 }
 
-type binaryNode[T cmp.Ordered] struct {
+type bstNode[T cmp.Ordered] struct {
 	val   T
-	left  *binaryNode[T]
-	right *binaryNode[T]
+	left  *bstNode[T]
+	right *bstNode[T]
 }
 
 func (bst *BinarySearchTree[T]) Empty() bool {
@@ -24,7 +24,7 @@ func (bst *BinarySearchTree[T]) Contains(val T) bool {
 	return bst.root.contains(val)
 }
 
-func (n *binaryNode[T]) contains(val T) bool {
+func (n *bstNode[T]) contains(val T) bool {
 	if n == nil {
 		return false
 	}
@@ -40,13 +40,63 @@ func (n *binaryNode[T]) contains(val T) bool {
 	return n.right.contains(val)
 }
 
+func (bst *BinarySearchTree[T]) Equals(other *BinarySearchTree[T]) bool {
+	return bst.root.equals(other.root)
+}
+
+func (n *bstNode[T]) equals(other *bstNode[T]) bool {
+	if n == nil && other == nil {
+		return true
+	}
+
+	if n == nil || other == nil || n.val != other.val {
+		return false
+	}
+
+	return n.left.equals(other.left) && n.right.equals(other.right)
+}
+
+func (bst *BinarySearchTree[T]) Min() T {
+	if bst.root == nil {
+		var zero T
+		return zero
+	}
+
+	return bst.root.min()
+}
+
+func (n *bstNode[T]) min() T {
+	if n.left == nil {
+		return n.val
+	}
+
+	return n.left.min()
+}
+
+func (bst *BinarySearchTree[T]) Max() T {
+	if bst.root == nil {
+		var zero T
+		return zero
+	}
+
+	return bst.root.max()
+}
+
+func (n *bstNode[T]) max() T {
+	if n.right == nil {
+		return n.val
+	}
+
+	return n.right.max()
+}
+
 func (bst *BinarySearchTree[T]) Insert(val T) {
 	bst.root = bst.root.insert(val)
 }
 
-func (n *binaryNode[T]) insert(val T) *binaryNode[T] {
+func (n *bstNode[T]) insert(val T) *bstNode[T] {
 	if n == nil {
-		return &binaryNode[T]{val: val}
+		return &bstNode[T]{val: val}
 	}
 
 	if val < n.val {
@@ -61,7 +111,7 @@ func (bst *BinarySearchTree[T]) Delete(val T) {
 	bst.root = bst.root.delete(val)
 }
 
-func (n *binaryNode[T]) delete(val T) *binaryNode[T] {
+func (n *bstNode[T]) delete(val T) *bstNode[T] {
 	if n == nil {
 		return nil
 	}
@@ -97,7 +147,7 @@ func (bst *BinarySearchTree[T]) PreOrderTraversal(callback func(val T)) {
 	bst.root.preOrderTraversal(callback)
 }
 
-func (n *binaryNode[T]) preOrderTraversal(callback func(val T)) {
+func (n *bstNode[T]) preOrderTraversal(callback func(val T)) {
 	if n == nil {
 		return
 	}
@@ -111,7 +161,7 @@ func (bst *BinarySearchTree[T]) InOrderTraversal(callback func(val T)) {
 	bst.root.inOrderTraversal(callback)
 }
 
-func (n *binaryNode[T]) inOrderTraversal(callback func(val T)) {
+func (n *bstNode[T]) inOrderTraversal(callback func(val T)) {
 	if n == nil {
 		return
 	}
@@ -125,7 +175,7 @@ func (bst *BinarySearchTree[T]) PostOrderTraversal(callback func(val T)) {
 	bst.root.postOrderTraversal(callback)
 }
 
-func (n *binaryNode[T]) postOrderTraversal(callback func(val T)) {
+func (n *bstNode[T]) postOrderTraversal(callback func(val T)) {
 	if n == nil {
 		return
 	}
@@ -136,7 +186,7 @@ func (n *binaryNode[T]) postOrderTraversal(callback func(val T)) {
 }
 
 func (bst *BinarySearchTree[T]) LevelOrderTraversal(callback func(val T)) {
-	q := queue.Queue[*binaryNode[T]]{}
+	q := queue.Queue[*bstNode[T]]{}
 	q.Enqueue(bst.root)
 
 	for !q.Empty() {
@@ -155,20 +205,4 @@ func (bst *BinarySearchTree[T]) LevelOrderTraversal(callback func(val T)) {
 
 		callback(n.val)
 	}
-}
-
-func (bst *BinarySearchTree[T]) Equals(other *BinarySearchTree[T]) bool {
-	return bst.root.equals(other.root)
-}
-
-func (n *binaryNode[T]) equals(other *binaryNode[T]) bool {
-	if n == nil && other == nil {
-		return true
-	}
-
-	if n == nil || other == nil || n.val != other.val {
-		return false
-	}
-
-	return n.left.equals(other.left) && n.right.equals(other.right)
 }
