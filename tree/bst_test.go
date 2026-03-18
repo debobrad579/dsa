@@ -59,6 +59,11 @@ func TestMinMax(t *testing.T) {
 	assert.Equal(t, 7, bst.Max())
 }
 
+func TestHeight(t *testing.T) {
+	bst := setupTree()
+	assert.Equal(t, 3, bst.Height())
+}
+
 func TestDelete(t *testing.T) {
 	bst := setupTree()
 	bst.Delete(6)

@@ -90,6 +90,18 @@ func (n *bstNode[T]) max() T {
 	return n.right.max()
 }
 
+func (bst *BinarySearchTree[T]) Height() int {
+	return bst.root.height()
+}
+
+func (n *bstNode[T]) height() int {
+	if n == nil {
+		return 0
+	}
+
+	return max(n.left.height(), n.right.height()) + 1
+}
+
 func (bst *BinarySearchTree[T]) Insert(val T) {
 	bst.root = bst.root.insert(val)
 }
@@ -134,12 +146,9 @@ func (n *bstNode[T]) delete(val T) *bstNode[T] {
 		return n.right
 	}
 
-	currentNode := n.right
-	for currentNode.left != nil {
-		currentNode = currentNode.left
-	}
-	n.val = currentNode.val
-	n.right = n.right.delete(currentNode.val)
+	successorVal := n.right.min()
+	n.val = successorVal
+	n.right = n.right.delete(successorVal)
 	return n
 }
 
