@@ -15,7 +15,7 @@ func collectInts(traversal func(func(int))) []int {
 	return result
 }
 
-func setupTree() tree.BinarySearchTree[int] {
+func setupBST() tree.BinarySearchTree[int] {
 	var bst tree.BinarySearchTree[int]
 	bst.Insert(4)
 	bst.Insert(2)
@@ -33,8 +33,8 @@ func setupTree() tree.BinarySearchTree[int] {
 	// 1  3 5  7
 }
 
-func TestContains(t *testing.T) {
-	bst := setupTree()
+func TestBSTContains(t *testing.T) {
+	bst := setupBST()
 	assert.True(t, bst.Contains(4))
 	assert.True(t, bst.Contains(2))
 	assert.True(t, bst.Contains(6))
@@ -45,48 +45,48 @@ func TestContains(t *testing.T) {
 	assert.False(t, bst.Contains(42))
 }
 
-func TestEquals(t *testing.T) {
-	bst := setupTree()
-	bst2 := setupTree()
+func TestBSTEquals(t *testing.T) {
+	bst := setupBST()
+	bst2 := setupBST()
 	assert.True(t, bst.Equals(&bst2))
 	bst2.Insert(10)
 	assert.False(t, bst.Equals(&bst2))
 }
 
-func TestMinMax(t *testing.T) {
-	bst := setupTree()
+func TestBSTMinMax(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, 1, bst.Min())
 	assert.Equal(t, 7, bst.Max())
 }
 
-func TestHeight(t *testing.T) {
-	bst := setupTree()
+func TestBSTHeight(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, 3, bst.Height())
 }
 
-func TestDelete(t *testing.T) {
-	bst := setupTree()
+func TestBSTDelete(t *testing.T) {
+	bst := setupBST()
 	bst.Delete(6)
 	bst.Delete(4)
 	assert.Equal(t, []int{1, 2, 3, 5, 7}, collectInts(bst.InOrderTraversal))
 }
 
-func TestPreOrderTraversal(t *testing.T) {
-	bst := setupTree()
+func TestBSTPreOrderTraversal(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, collectInts(bst.PreOrderTraversal))
 }
 
-func TestInOrderTraversal(t *testing.T) {
-	bst := setupTree()
+func TestBSTInOrderTraversal(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(bst.InOrderTraversal))
 }
 
-func TestPostOrderTraversal(t *testing.T) {
-	bst := setupTree()
+func TestBSTPostOrderTraversal(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, collectInts(bst.PostOrderTraversal))
 }
 
-func TestLevelOrderTraversal(t *testing.T) {
-	bst := setupTree()
+func TestBSTLevelOrderTraversal(t *testing.T) {
+	bst := setupBST()
 	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, collectInts(bst.LevelOrderTraversal))
 }

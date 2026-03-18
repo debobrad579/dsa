@@ -70,21 +70,21 @@ func TestAVLBalancingOnDelete(t *testing.T) {
 }
 
 func TestAVLPreOrderTraversal(t *testing.T) {
-	bst := setupTree()
-	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, collectInts(bst.PreOrderTraversal))
+	avl := setupAVLTree()
+	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, collectInts(avl.PreOrderTraversal))
 }
 
 func TestAVLInOrderTraversal(t *testing.T) {
-	bst := setupTree()
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(bst.InOrderTraversal))
+	avl := setupAVLTree()
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(avl.InOrderTraversal))
 }
 
 func TestAVLPostOrderTraversal(t *testing.T) {
-	bst := setupTree()
-	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, collectInts(bst.PostOrderTraversal))
+	avl := setupAVLTree()
+	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, collectInts(avl.PostOrderTraversal))
 }
 
 func TestAVLLevelOrderTraversal(t *testing.T) {
-	bst := setupTree()
-	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, collectInts(bst.LevelOrderTraversal))
+	avl := setupAVLTree()
+	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, collectInts(avl.LevelOrderTraversal))
 }
