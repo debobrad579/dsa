@@ -1,10 +1,12 @@
 package search
 
-func BinarySearch(arr []int, target int) int {
+import "cmp"
+
+func BinarySearch[T cmp.Ordered](arr []T, target T) int {
 	return search(arr, 0, len(arr)-1, target)
 }
 
-func search(arr []int, lo, hi, target int) int {
+func search[T cmp.Ordered](arr []T, lo, hi int, target T) int {
 	for {
 		mid := lo + (hi-lo)/2
 		v := arr[mid]

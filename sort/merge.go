@@ -1,6 +1,8 @@
 package sort
 
-func MergeSort(arr []int) []int {
+import "cmp"
+
+func MergeSort[T cmp.Ordered](arr []T) []T {
 	if len(arr) < 2 {
 		return arr
 	}
@@ -8,8 +10,8 @@ func MergeSort(arr []int) []int {
 	return merge(MergeSort(arr[:len(arr)/2]), MergeSort(arr[len(arr)/2:]))
 }
 
-func merge(a, b []int) []int {
-	final := make([]int, len(a)+len(b))
+func merge[T cmp.Ordered](a, b []T) []T {
+	final := make([]T, len(a)+len(b))
 
 	i, j := 0, 0
 	for i < len(a) && j < len(b) {
