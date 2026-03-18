@@ -20,6 +20,26 @@ func (bst *BinarySearchTree[T]) Empty() bool {
 	return bst.root == nil
 }
 
+func (bst *BinarySearchTree[T]) Contains(val T) bool {
+	return bst.root.contains(val)
+}
+
+func (n *binaryNode[T]) contains(val T) bool {
+	if n == nil {
+		return false
+	}
+
+	if n.val == val {
+		return true
+	}
+
+	if val < n.val {
+		return n.left.contains(val)
+	}
+
+	return n.right.contains(val)
+}
+
 func (bst *BinarySearchTree[T]) Insert(val T) {
 	bst.root = bst.root.insert(val)
 }
