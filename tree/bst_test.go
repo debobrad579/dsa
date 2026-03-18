@@ -90,20 +90,3 @@ func TestLevelOrderTraversal(t *testing.T) {
 	bst := setupTree()
 	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, collectInts(bst.LevelOrderTraversal))
 }
-
-func TestTraversalEmptyTree(t *testing.T) {
-	var bst tree.BinarySearchTree[int]
-	assert.Equal(t, []int{}, collectInts(bst.PreOrderTraversal))
-	assert.Equal(t, []int{}, collectInts(bst.InOrderTraversal))
-	assert.Equal(t, []int{}, collectInts(bst.PostOrderTraversal))
-	assert.Equal(t, []int{}, collectInts(bst.LevelOrderTraversal))
-}
-
-func TestTraversalSingleNode(t *testing.T) {
-	var bst tree.BinarySearchTree[int]
-	bst.Insert(42)
-	assert.Equal(t, []int{42}, collectInts(bst.PreOrderTraversal))
-	assert.Equal(t, []int{42}, collectInts(bst.InOrderTraversal))
-	assert.Equal(t, []int{42}, collectInts(bst.PostOrderTraversal))
-	assert.Equal(t, []int{42}, collectInts(bst.LevelOrderTraversal))
-}

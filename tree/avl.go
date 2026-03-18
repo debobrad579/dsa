@@ -25,6 +25,22 @@ func (n *avlNode[T]) nodeHeight() int {
 	return n.height
 }
 
+func (n *avlNode[T]) updateHeight() {
+	n.height = max(n.left.nodeHeight(), n.right.nodeHeight()) + 1
+}
+
+func (n *avlNode[T]) balanceFactor() int {
+	if n == nil {
+		return 0
+	}
+
+	return n.left.nodeHeight() - n.right.nodeHeight()
+}
+
+func (avl *AVLTree[T]) Height() int {
+	return avl.root.nodeHeight()
+}
+
 func (avl *AVLTree[T]) Empty() bool {
 	return avl.root == nil
 }
@@ -99,12 +115,43 @@ func (n *avlNode[T]) max() T {
 	return n.right.max()
 }
 
-func (avl *AVLTree[T]) Height() int {
-	if avl.root == nil {
-		return 0
-	}
+func (n *avlNode[T]) leftRotate() *avlNode[T] {
+	rightChild := n.right
+	n.right = rightChild.left
+	rightChild.left = n
+	n.updateHeight()
+	rightChild.updateHeight()
+	return rightChild
+}
 
-	return avl.root.height
+func (n *avlNode[T]) rightRotate() *avlNode[T] {
+	leftChild := n.left
+	n.left = leftChild.right
+	leftChild.right = n
+	n.updateHeight()
+	leftChild.updateHeight()
+	return leftChild
+}
+
+func (n *avlNode[T]) rotate() *avlNode[T] {
+	switch n.balanceFactor() {
+	case 2:
+		if n.left.balanceFactor() >= 0 {
+			return n.rightRotate()
+		} else {
+			n.left = n.left.leftRotate()
+			return n.leftRotate()
+		}
+	case -2:
+		if n.right.balanceFactor() <= 0 {
+			return n.leftRotate()
+		} else {
+			n.right = n.right.rightRotate()
+			return n.rightRotate()
+		}
+	default:
+		return n
+	}
 }
 
 func (avl *AVLTree[T]) Insert(val T) {
@@ -122,8 +169,8 @@ func (n *avlNode[T]) insert(val T) *avlNode[T] {
 		n.right = n.right.insert(val)
 	}
 
-	n.height = max(n.left.nodeHeight(), n.right.nodeHeight()) + 1
-	return n
+	n.updateHeight()
+	return n.rotate()
 }
 
 func (avl *AVLTree[T]) Delete(val T) {
@@ -160,8 +207,8 @@ func (n *avlNode[T]) delete(val T) *avlNode[T] {
 		}
 	}
 
-	n.height = max(n.left.nodeHeight(), n.right.nodeHeight()) + 1
-	return n
+	n.updateHeight()
+	return n.rotate()
 }
 
 func (avl *AVLTree[T]) PreOrderTraversal(callback func(val T)) {
