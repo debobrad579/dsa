@@ -156,3 +156,19 @@ func (bst *BinarySearchTree[T]) LevelOrderTraversal(callback func(val T)) {
 		callback(n.val)
 	}
 }
+
+func (bst *BinarySearchTree[T]) Equals(other *BinarySearchTree[T]) bool {
+	return bst.root.equals(other.root)
+}
+
+func (n *binaryNode[T]) equals(other *binaryNode[T]) bool {
+	if n == nil && other == nil {
+		return true
+	}
+
+	if n == nil || other == nil || n.val != other.val {
+		return false
+	}
+
+	return n.left.equals(other.left) && n.right.equals(other.right)
+}

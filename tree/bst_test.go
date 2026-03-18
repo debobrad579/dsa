@@ -88,3 +88,11 @@ func TestTraversalSingleNode(t *testing.T) {
 	assert.Equal(t, []int{42}, collectInts(&bst, bst.PostOrderTraversal))
 	assert.Equal(t, []int{42}, collectInts(&bst, bst.LevelOrderTraversal))
 }
+
+func TestEquals(t *testing.T) {
+	bst := setupTree()
+	bst2 := setupTree()
+	assert.True(t, bst.Equals(&bst2))
+	bst2.Insert(10)
+	assert.False(t, bst.Equals(&bst2))
+}
