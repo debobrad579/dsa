@@ -14,6 +14,7 @@ func (t *avlTree[T]) Empty() bool                    { return t.root == nil }
 func (t *avlTree[T]) Contains(val T) bool            { return contains(t.root, val) }
 func (t *avlTree[T]) Min() T                         { return minChild(t.root) }
 func (t *avlTree[T]) Max() T                         { return maxChild(t.root) }
+func (avl *avlTree[T]) Height() int                  { return avl.root.nodeHeight() }
 func (t *avlTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
 func (t *avlTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
 func (t *avlTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
@@ -64,10 +65,6 @@ func (n *avlNode[T]) balanceFactor() int {
 	}
 
 	return n.left.nodeHeight() - n.right.nodeHeight()
-}
-
-func (avl *avlTree[T]) Height() int {
-	return avl.root.nodeHeight()
 }
 
 func (n *avlNode[T]) leftRotate() *avlNode[T] {
