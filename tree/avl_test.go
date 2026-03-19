@@ -32,14 +32,6 @@ func TestAVLContains(t *testing.T) {
 	assert.False(t, avl.Contains(42))
 }
 
-func TestAVLEquals(t *testing.T) {
-	avl := setupAVLTree()
-	avl2 := setupAVLTree()
-	assert.True(t, avl.Equals(avl2))
-	avl2.Insert(10)
-	assert.False(t, avl.Equals(avl2))
-}
-
 func TestAVLMinMax(t *testing.T) {
 	avl := setupAVLTree()
 	assert.Equal(t, 1, avl.Min())

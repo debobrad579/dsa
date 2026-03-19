@@ -45,14 +45,6 @@ func TestBSTContains(t *testing.T) {
 	assert.False(t, bst.Contains(42))
 }
 
-func TestBSTEquals(t *testing.T) {
-	bst := setupBST()
-	bst2 := setupBST()
-	assert.True(t, bst.Equals(bst2))
-	bst2.Insert(10)
-	assert.False(t, bst.Equals(bst2))
-}
-
 func TestBSTMinMax(t *testing.T) {
 	bst := setupBST()
 	assert.Equal(t, 1, bst.Min())

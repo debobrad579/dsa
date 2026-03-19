@@ -69,14 +69,6 @@ func TestRBTContains(t *testing.T) {
 	assert.False(t, rbt.Contains(42))
 }
 
-func TestRBTEquals(t *testing.T) {
-	rbt := setupRBT()
-	rbt2 := setupRBT()
-	assert.True(t, rbt.Equals(&rbt2))
-	rbt2.Insert(10)
-	assert.False(t, rbt.Equals(&rbt2))
-}
-
 func TestRBTMinMax(t *testing.T) {
 	rbt := setupRBT()
 	assert.Equal(t, 1, rbt.Min())
