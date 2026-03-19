@@ -14,7 +14,7 @@ func collectInts(traversal func(func(int))) []int {
 	return result
 }
 
-func assertValidRBT(t *testing.T, rbt *RedBlackTree[int]) {
+func assertValidRBT(t *testing.T, rbt *redBlackTree[int]) {
 	assert.False(t, rbt.root.isRed())
 
 	var validate func(n *rbtNode[int]) int
@@ -42,8 +42,8 @@ func assertValidRBT(t *testing.T, rbt *RedBlackTree[int]) {
 	validate(rbt.root)
 }
 
-func setupRBT() RedBlackTree[int] {
-	var rbt RedBlackTree[int]
+func setupRBT() redBlackTree[int] {
+	var rbt redBlackTree[int]
 	for i := 1; i <= 7; i++ {
 		rbt.Insert(i)
 	}
@@ -99,7 +99,7 @@ func TestRBTDeleteRoot(t *testing.T) {
 }
 
 func TestRBTDeleteRootSingleNode(t *testing.T) {
-	var rbt RedBlackTree[int]
+	var rbt redBlackTree[int]
 	rbt.Insert(1)
 	rbt.Delete(1)
 	assert.True(t, rbt.Empty())

@@ -6,7 +6,11 @@ import (
 	"github.com/debobrad579/dsa/queue"
 )
 
-type RedBlackTree[T cmp.Ordered] struct {
+func NewRedBlackTree[T cmp.Ordered]() BinarySearchTree[T] {
+	return &redBlackTree[T]{}
+}
+
+type redBlackTree[T cmp.Ordered] struct {
 	root *rbtNode[T]
 }
 
@@ -26,11 +30,11 @@ func (n *rbtNode[T]) isRed() bool {
 	return n.red
 }
 
-func (rbt *RedBlackTree[T]) Empty() bool {
+func (rbt *redBlackTree[T]) Empty() bool {
 	return rbt.root == nil
 }
 
-func (rbt *RedBlackTree[T]) Contains(val T) bool {
+func (rbt *redBlackTree[T]) Contains(val T) bool {
 	return rbt.root.contains(val)
 }
 
@@ -50,8 +54,13 @@ func (n *rbtNode[T]) contains(val T) bool {
 	return n.right.contains(val)
 }
 
-func (rbt *RedBlackTree[T]) Equals(other *RedBlackTree[T]) bool {
-	return rbt.root.equals(other.root)
+func (rbt *redBlackTree[T]) Equals(other BinarySearchTree[T]) bool {
+	o, ok := other.(*redBlackTree[T])
+	if !ok {
+		return false
+	}
+
+	return rbt.root.equals(o.root)
 }
 
 func (n *rbtNode[T]) equals(other *rbtNode[T]) bool {
@@ -66,7 +75,7 @@ func (n *rbtNode[T]) equals(other *rbtNode[T]) bool {
 	return n.left.equals(other.left) && n.right.equals(other.right)
 }
 
-func (rbt *RedBlackTree[T]) Min() T {
+func (rbt *redBlackTree[T]) Min() T {
 	if rbt.root == nil {
 		var zero T
 		return zero
@@ -83,7 +92,7 @@ func (n *rbtNode[T]) min() T {
 	return n.left.min()
 }
 
-func (rbt *RedBlackTree[T]) Max() T {
+func (rbt *redBlackTree[T]) Max() T {
 	if rbt.root == nil {
 		var zero T
 		return zero
@@ -100,7 +109,7 @@ func (n *rbtNode[T]) max() T {
 	return n.right.max()
 }
 
-func (rbt *RedBlackTree[T]) Height() int {
+func (rbt *redBlackTree[T]) Height() int {
 	return rbt.root.height()
 }
 
@@ -112,7 +121,7 @@ func (n *rbtNode[T]) height() int {
 	return max(n.left.height(), n.right.height()) + 1
 }
 
-func (rbt *RedBlackTree[T]) rotateLeft(pivotParent *rbtNode[T]) {
+func (rbt *redBlackTree[T]) rotateLeft(pivotParent *rbtNode[T]) {
 	if pivotParent == nil || pivotParent.right == nil {
 		return
 	}
@@ -137,7 +146,7 @@ func (rbt *RedBlackTree[T]) rotateLeft(pivotParent *rbtNode[T]) {
 	pivotParent.parent = pivot
 }
 
-func (rbt *RedBlackTree[T]) rotateRight(pivotParent *rbtNode[T]) {
+func (rbt *redBlackTree[T]) rotateRight(pivotParent *rbtNode[T]) {
 	if pivotParent == nil || pivotParent.left == nil {
 		return
 	}
@@ -162,7 +171,7 @@ func (rbt *RedBlackTree[T]) rotateRight(pivotParent *rbtNode[T]) {
 	pivotParent.parent = pivot
 }
 
-func (rbt *RedBlackTree[T]) Insert(val T) {
+func (rbt *redBlackTree[T]) Insert(val T) {
 	newNode := &rbtNode[T]{val: val, red: true}
 
 	var parent *rbtNode[T] = nil
@@ -194,7 +203,7 @@ func (rbt *RedBlackTree[T]) Insert(val T) {
 	rbt.root.red = false
 }
 
-func (rbt *RedBlackTree[T]) fixInsert(n *rbtNode[T]) {
+func (rbt *redBlackTree[T]) fixInsert(n *rbtNode[T]) {
 	for n != rbt.root && n.parent.red {
 		parent := n.parent
 		grandparent := parent.parent
@@ -242,7 +251,7 @@ func (rbt *RedBlackTree[T]) fixInsert(n *rbtNode[T]) {
 	}
 }
 
-func (rbt *RedBlackTree[T]) Delete(val T) {
+func (rbt *redBlackTree[T]) Delete(val T) {
 	n := rbt.root
 
 	for n != nil {
@@ -311,7 +320,7 @@ func (rbt *RedBlackTree[T]) Delete(val T) {
 	}
 }
 
-func (rbt *RedBlackTree[T]) fixDelete(n *rbtNode[T]) {
+func (rbt *redBlackTree[T]) fixDelete(n *rbtNode[T]) {
 	for n != rbt.root && !n.isRed() {
 		parent := n.parent
 
@@ -378,7 +387,7 @@ func (rbt *RedBlackTree[T]) fixDelete(n *rbtNode[T]) {
 	n.red = false
 }
 
-func (rbt *RedBlackTree[T]) PreOrderTraversal(callback func(val T)) {
+func (rbt *redBlackTree[T]) PreOrderTraversal(callback func(val T)) {
 	rbt.root.preOrderTraversal(callback)
 }
 
@@ -392,7 +401,7 @@ func (n *rbtNode[T]) preOrderTraversal(callback func(val T)) {
 	n.right.preOrderTraversal(callback)
 }
 
-func (rbt *RedBlackTree[T]) InOrderTraversal(callback func(val T)) {
+func (rbt *redBlackTree[T]) InOrderTraversal(callback func(val T)) {
 	rbt.root.inOrderTraversal(callback)
 }
 
@@ -406,7 +415,7 @@ func (n *rbtNode[T]) inOrderTraversal(callback func(val T)) {
 	n.right.inOrderTraversal(callback)
 }
 
-func (rbt *RedBlackTree[T]) PostOrderTraversal(callback func(val T)) {
+func (rbt *redBlackTree[T]) PostOrderTraversal(callback func(val T)) {
 	rbt.root.postOrderTraversal(callback)
 }
 
@@ -420,7 +429,7 @@ func (n *rbtNode[T]) postOrderTraversal(callback func(val T)) {
 	callback(n.val)
 }
 
-func (rbt *RedBlackTree[T]) LevelOrderTraversal(callback func(val T)) {
+func (rbt *redBlackTree[T]) LevelOrderTraversal(callback func(val T)) {
 	q := queue.New[*rbtNode[T]]()
 	q.Enqueue(rbt.root)
 

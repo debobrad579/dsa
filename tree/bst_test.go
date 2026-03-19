@@ -16,7 +16,7 @@ func collectInts(traversal func(func(int))) []int {
 }
 
 func setupBST() tree.BinarySearchTree[int] {
-	var bst tree.BinarySearchTree[int]
+	bst := tree.NewBinarySearchTree[int]()
 	bst.Insert(4)
 	bst.Insert(2)
 	bst.Insert(6)
@@ -48,9 +48,9 @@ func TestBSTContains(t *testing.T) {
 func TestBSTEquals(t *testing.T) {
 	bst := setupBST()
 	bst2 := setupBST()
-	assert.True(t, bst.Equals(&bst2))
+	assert.True(t, bst.Equals(bst2))
 	bst2.Insert(10)
-	assert.False(t, bst.Equals(&bst2))
+	assert.False(t, bst.Equals(bst2))
 }
 
 func TestBSTMinMax(t *testing.T) {

@@ -7,8 +7,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func setupAVLTree() tree.AVLTree[int] {
-	var avl tree.AVLTree[int]
+func setupAVLTree() tree.BinarySearchTree[int] {
+	avl := tree.NewAVLTree[int]()
 	for i := 1; i <= 7; i++ {
 		avl.Insert(i)
 	}
@@ -35,9 +35,9 @@ func TestAVLContains(t *testing.T) {
 func TestAVLEquals(t *testing.T) {
 	avl := setupAVLTree()
 	avl2 := setupAVLTree()
-	assert.True(t, avl.Equals(&avl2))
+	assert.True(t, avl.Equals(avl2))
 	avl2.Insert(10)
-	assert.False(t, avl.Equals(&avl2))
+	assert.False(t, avl.Equals(avl2))
 }
 
 func TestAVLMinMax(t *testing.T) {

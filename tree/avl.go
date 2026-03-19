@@ -6,7 +6,11 @@ import (
 	"github.com/debobrad579/dsa/queue"
 )
 
-type AVLTree[T cmp.Ordered] struct {
+func NewAVLTree[T cmp.Ordered]() BinarySearchTree[T] {
+	return &avlTree[T]{}
+}
+
+type avlTree[T cmp.Ordered] struct {
 	root *avlNode[T]
 }
 
@@ -37,15 +41,15 @@ func (n *avlNode[T]) balanceFactor() int {
 	return n.left.nodeHeight() - n.right.nodeHeight()
 }
 
-func (avl *AVLTree[T]) Height() int {
+func (avl *avlTree[T]) Height() int {
 	return avl.root.nodeHeight()
 }
 
-func (avl *AVLTree[T]) Empty() bool {
+func (avl *avlTree[T]) Empty() bool {
 	return avl.root == nil
 }
 
-func (avl *AVLTree[T]) Contains(val T) bool {
+func (avl *avlTree[T]) Contains(val T) bool {
 	return avl.root.contains(val)
 }
 
@@ -65,8 +69,13 @@ func (n *avlNode[T]) contains(val T) bool {
 	return n.right.contains(val)
 }
 
-func (avl *AVLTree[T]) Equals(other *AVLTree[T]) bool {
-	return avl.root.equals(other.root)
+func (bst *avlTree[T]) Equals(other BinarySearchTree[T]) bool {
+	o, ok := other.(*avlTree[T])
+	if !ok {
+		return false
+	}
+
+	return bst.root.equals(o.root)
 }
 
 func (n *avlNode[T]) equals(other *avlNode[T]) bool {
@@ -81,7 +90,7 @@ func (n *avlNode[T]) equals(other *avlNode[T]) bool {
 	return n.left.equals(other.left) && n.right.equals(other.right)
 }
 
-func (avl *AVLTree[T]) Min() T {
+func (avl *avlTree[T]) Min() T {
 	if avl.root == nil {
 		var zero T
 		return zero
@@ -98,7 +107,7 @@ func (n *avlNode[T]) min() T {
 	return n.left.min()
 }
 
-func (avl *AVLTree[T]) Max() T {
+func (avl *avlTree[T]) Max() T {
 	if avl.root == nil {
 		var zero T
 		return zero
@@ -154,7 +163,7 @@ func (n *avlNode[T]) rotate() *avlNode[T] {
 	}
 }
 
-func (avl *AVLTree[T]) Insert(val T) {
+func (avl *avlTree[T]) Insert(val T) {
 	avl.root = avl.root.insert(val)
 }
 
@@ -173,7 +182,7 @@ func (n *avlNode[T]) insert(val T) *avlNode[T] {
 	return n.rotate()
 }
 
-func (avl *AVLTree[T]) Delete(val T) {
+func (avl *avlTree[T]) Delete(val T) {
 	avl.root = avl.root.delete(val)
 }
 
@@ -211,7 +220,7 @@ func (n *avlNode[T]) delete(val T) *avlNode[T] {
 	return n.rotate()
 }
 
-func (avl *AVLTree[T]) PreOrderTraversal(callback func(val T)) {
+func (avl *avlTree[T]) PreOrderTraversal(callback func(val T)) {
 	avl.root.preOrderTraversal(callback)
 }
 
@@ -225,7 +234,7 @@ func (n *avlNode[T]) preOrderTraversal(callback func(val T)) {
 	n.right.preOrderTraversal(callback)
 }
 
-func (avl *AVLTree[T]) InOrderTraversal(callback func(val T)) {
+func (avl *avlTree[T]) InOrderTraversal(callback func(val T)) {
 	avl.root.inOrderTraversal(callback)
 }
 
@@ -239,7 +248,7 @@ func (n *avlNode[T]) inOrderTraversal(callback func(val T)) {
 	n.right.inOrderTraversal(callback)
 }
 
-func (avl *AVLTree[T]) PostOrderTraversal(callback func(val T)) {
+func (avl *avlTree[T]) PostOrderTraversal(callback func(val T)) {
 	avl.root.postOrderTraversal(callback)
 }
 
@@ -253,7 +262,7 @@ func (n *avlNode[T]) postOrderTraversal(callback func(val T)) {
 	callback(n.val)
 }
 
-func (avl *AVLTree[T]) LevelOrderTraversal(callback func(val T)) {
+func (avl *avlTree[T]) LevelOrderTraversal(callback func(val T)) {
 	q := queue.New[*avlNode[T]]()
 	q.Enqueue(avl.root)
 
