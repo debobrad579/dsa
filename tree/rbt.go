@@ -194,42 +194,46 @@ func (rbt *RedBlackTree[T]) Insert(val T) {
 	rbt.root.red = false
 }
 
-func (rbt *RedBlackTree[T]) fixInsert(newNode *rbtNode[T]) {
-	for newNode != rbt.root && newNode.parent.red {
-		parent := newNode.parent
+func (rbt *RedBlackTree[T]) fixInsert(n *rbtNode[T]) {
+	for n != rbt.root && n.parent.red {
+		parent := n.parent
 		grandparent := parent.parent
 
 		switch parent {
 		case grandparent.right:
 			uncle := grandparent.left
+
 			if uncle.isRed() {
 				uncle.red = false
 				parent.red = false
 				grandparent.red = true
-				newNode = grandparent
+				n = grandparent
 			} else {
-				if newNode == parent.left {
-					newNode = parent
-					rbt.rotateRight(newNode)
-					parent = newNode.parent
+				if n == parent.left {
+					n = parent
+					rbt.rotateRight(n)
+					parent = n.parent
 				}
+
 				parent.red = false
 				grandparent.red = true
 				rbt.rotateLeft(grandparent)
 			}
 		case grandparent.left:
 			uncle := grandparent.right
+
 			if uncle.isRed() {
 				uncle.red = false
 				parent.red = false
 				grandparent.red = true
-				newNode = grandparent
+				n = grandparent
 			} else {
-				if newNode == parent.right {
-					newNode = parent
-					rbt.rotateLeft(newNode)
-					parent = newNode.parent
+				if n == parent.right {
+					n = parent
+					rbt.rotateLeft(n)
+					parent = n.parent
 				}
+
 				parent.red = false
 				grandparent.red = true
 				rbt.rotateRight(grandparent)
@@ -239,36 +243,139 @@ func (rbt *RedBlackTree[T]) fixInsert(newNode *rbtNode[T]) {
 }
 
 func (rbt *RedBlackTree[T]) Delete(val T) {
-	rbt.root = rbt.root.delete(val)
+	n := rbt.root
+
+	for n != nil {
+		if val < n.val {
+			n = n.left
+		} else if val > n.val {
+			n = n.right
+		} else {
+			break
+		}
+	}
+
+	if n == nil {
+		return
+	}
+
+	if n.left != nil && n.right != nil {
+		successor := n.right
+		for successor.left != nil {
+			successor = successor.left
+		}
+
+		n.val = successor.val
+		n = successor
+	}
+
+	if n.parent == nil {
+		child := n.right
+		if child != nil {
+			child.parent = nil
+		}
+		rbt.root = child
+		return
+	}
+
+	child := n.left
+	if child == nil {
+		child = n.right
+	}
+
+	if child == nil {
+		if !n.isRed() {
+			rbt.fixDelete(n)
+		}
+
+		if n == n.parent.left {
+			n.parent.left = nil
+		} else {
+			n.parent.right = nil
+		}
+
+		n.parent = nil
+		return
+	}
+
+	child.parent = n.parent
+
+	if n == n.parent.left {
+		n.parent.left = child
+	} else {
+		n.parent.right = child
+	}
+
+	if !n.isRed() {
+		rbt.fixDelete(child)
+	}
 }
 
-func (n *rbtNode[T]) delete(val T) *rbtNode[T] {
-	if n == nil {
-		return nil
+func (rbt *RedBlackTree[T]) fixDelete(n *rbtNode[T]) {
+	for n != rbt.root && !n.isRed() {
+		parent := n.parent
+
+		switch n {
+		case parent.left:
+			sibling := parent.right
+
+			if sibling.isRed() {
+				sibling.red = false
+				parent.red = true
+				rbt.rotateLeft(parent)
+				sibling = parent.right
+			}
+
+			if !sibling.left.isRed() && !sibling.right.isRed() {
+				sibling.red = true
+				n = parent
+				parent = n.parent
+			} else {
+				if !sibling.right.isRed() {
+					sibling.left.red = false
+					sibling.red = true
+					rbt.rotateRight(sibling)
+					sibling = parent.right
+				}
+
+				sibling.red = parent.red
+				parent.red = false
+				sibling.right.red = false
+				rbt.rotateLeft(parent)
+				n = rbt.root
+			}
+		case parent.right:
+			sibling := parent.left
+
+			if sibling.isRed() {
+				sibling.red = false
+				parent.red = true
+				rbt.rotateRight(parent)
+				sibling = parent.left
+			}
+
+			if !sibling.right.isRed() && !sibling.left.isRed() {
+				sibling.red = true
+				n = parent
+				parent = n.parent
+			} else {
+				if !sibling.left.isRed() {
+					sibling.right.red = false
+					sibling.red = true
+					rbt.rotateLeft(sibling)
+					sibling = parent.left
+				}
+
+				sibling.red = parent.red
+				parent.red = false
+				sibling.left.red = false
+				rbt.rotateRight(parent)
+				n = rbt.root
+			}
+		}
 	}
 
-	if val < n.val {
-		n.left = n.left.delete(val)
-		return n
-	}
-
-	if val > n.val {
-		n.right = n.right.delete(val)
-		return n
-	}
-
-	if n.right == nil {
-		return n.left
-	}
-
-	if n.left == nil {
-		return n.right
-	}
-
-	successorVal := n.right.min()
-	n.val = successorVal
-	n.right = n.right.delete(successorVal)
-	return n
+	n.red = false
 }
 
 func (rbt *RedBlackTree[T]) PreOrderTraversal(callback func(val T)) {
