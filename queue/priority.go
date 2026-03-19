@@ -3,6 +3,7 @@ package queue
 type PriorityQueue[T any] interface {
 	Push(T)
 	Pop() T
+	Peek() T
 	Length() int
 }
 

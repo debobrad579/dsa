@@ -254,7 +254,7 @@ func (n *avlNode[T]) postOrderTraversal(callback func(val T)) {
 }
 
 func (avl *AVLTree[T]) LevelOrderTraversal(callback func(val T)) {
-	q := queue.Queue[*avlNode[T]]{}
+	q := queue.New[*avlNode[T]]()
 	q.Enqueue(avl.root)
 
 	for !q.Empty() {

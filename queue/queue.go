@@ -1,8 +1,19 @@
 package queue
 
-type Queue[T any] struct {
+type Queue[T any] interface {
+	Enqueue(T)
+	Deque() T
+	Peek() T
+	Empty() bool
+}
+
+type queue[T any] struct {
 	head *node[T]
 	tail *node[T]
+}
+
+func New[T any]() Queue[T] {
+	return &queue[T]{}
 }
 
 type node[T any] struct {
@@ -10,7 +21,7 @@ type node[T any] struct {
 	next *node[T]
 }
 
-func (q *Queue[T]) Enqueue(val T) {
+func (q *queue[T]) Enqueue(val T) {
 	newNode := &node[T]{val: val}
 
 	if q.Empty() {
@@ -22,7 +33,7 @@ func (q *Queue[T]) Enqueue(val T) {
 	q.tail = newNode
 }
 
-func (q *Queue[T]) Deque() (val T) {
+func (q *queue[T]) Deque() (val T) {
 	if q.Empty() {
 		panic("queue is empty")
 	}
@@ -38,7 +49,7 @@ func (q *Queue[T]) Deque() (val T) {
 	return head.val
 }
 
-func (q *Queue[T]) Peek() (val T) {
+func (q *queue[T]) Peek() (val T) {
 	if q.Empty() {
 		panic("queue is empty")
 	}
@@ -46,6 +57,6 @@ func (q *Queue[T]) Peek() (val T) {
 	return q.head.val
 }
 
-func (q *Queue[T]) Empty() bool {
+func (q *queue[T]) Empty() bool {
 	return q.head == nil
 }

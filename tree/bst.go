@@ -195,7 +195,7 @@ func (n *bstNode[T]) postOrderTraversal(callback func(val T)) {
 }
 
 func (bst *BinarySearchTree[T]) LevelOrderTraversal(callback func(val T)) {
-	q := queue.Queue[*bstNode[T]]{}
+	q := queue.New[*bstNode[T]]()
 	q.Enqueue(bst.root)
 
 	for !q.Empty() {

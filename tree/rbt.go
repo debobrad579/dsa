@@ -421,7 +421,7 @@ func (n *rbtNode[T]) postOrderTraversal(callback func(val T)) {
 }
 
 func (rbt *RedBlackTree[T]) LevelOrderTraversal(callback func(val T)) {
-	q := queue.Queue[*rbtNode[T]]{}
+	q := queue.New[*rbtNode[T]]()
 	q.Enqueue(rbt.root)
 
 	for !q.Empty() {

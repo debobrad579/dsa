@@ -29,9 +29,13 @@ func TestPriorityQueueMinHeapProperty(t *testing.T) {
 	pq.Push(8)
 	pq.Push(1)
 
+	assert.Equal(t, 1, pq.Peek())
 	assert.Equal(t, 1, pq.Pop())
+	assert.Equal(t, 3, pq.Peek())
 	assert.Equal(t, 3, pq.Pop())
+	assert.Equal(t, 5, pq.Peek())
 	assert.Equal(t, 5, pq.Pop())
+	assert.Equal(t, 8, pq.Peek())
 	assert.Equal(t, 8, pq.Pop())
 }
 

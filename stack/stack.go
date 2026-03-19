@@ -1,7 +1,18 @@
 package stack
 
-type Stack[T any] struct {
+type Stack[T any] interface {
+	Push(T)
+	Pop() T
+	Peek() T
+	Empty() bool
+}
+
+type stack[T any] struct {
 	head *node[T]
+}
+
+func New[T any]() Stack[T] {
+	return &stack[T]{}
 }
 
 type node[T any] struct {
@@ -9,14 +20,14 @@ type node[T any] struct {
 	next *node[T]
 }
 
-func (s *Stack[T]) Push(val T) {
+func (s *stack[T]) Push(val T) {
 	newNode := &node[T]{val: val, next: s.head}
 	s.head = newNode
 }
 
-func (s *Stack[T]) Pop() (val T) {
+func (s *stack[T]) Pop() (val T) {
 	if s.Empty() {
-		return val
+		panic("stack is empty")
 	}
 
 	head := s.head
@@ -25,13 +36,14 @@ func (s *Stack[T]) Pop() (val T) {
 	return head.val
 }
 
-func (s *Stack[T]) Peek() (val T) {
+func (s *stack[T]) Peek() (val T) {
 	if s.Empty() {
-		return val
+		panic("stack is empty")
 	}
+
 	return s.head.val
 }
 
-func (s *Stack[T]) Empty() bool {
+func (s *stack[T]) Empty() bool {
 	return s.head == nil
 }

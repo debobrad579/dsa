@@ -9,7 +9,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	var s stack.Stack[int]
+	s := stack.New[int]()
 	assert.True(t, s.Empty())
 	s.Push(1)
 	s.Push(2)

@@ -9,7 +9,7 @@ import (
 )
 
 func TestQueue(t *testing.T) {
-	var q queue.Queue[int]
+	q := queue.New[int]()
 	assert.True(t, q.Empty())
 	q.Enqueue(1)
 	q.Enqueue(2)
