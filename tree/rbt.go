@@ -8,8 +8,17 @@ func NewRedBlackTree[T cmp.Ordered]() BinarySearchTree[T] {
 
 type redBlackTree[T cmp.Ordered] struct {
 	root *rbtNode[T]
-	baseBST[T]
 }
+
+func (t *redBlackTree[T]) Empty() bool                    { return t.root == nil }
+func (t *redBlackTree[T]) Contains(val T) bool            { return contains(t.root, val) }
+func (t *redBlackTree[T]) Min() T                         { return minChild(t.root) }
+func (t *redBlackTree[T]) Max() T                         { return maxChild(t.root) }
+func (t *redBlackTree[T]) Height() int                    { return height(t.root) }
+func (t *redBlackTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
+func (t *redBlackTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
+func (t *redBlackTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
+func (t *redBlackTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
 
 type rbtNode[T cmp.Ordered] struct {
 	val    T
@@ -45,10 +54,6 @@ func (n *rbtNode[T]) isRed() bool {
 	}
 
 	return n.red
-}
-
-func (rbt *redBlackTree[T]) Empty() bool {
-	return rbt.root == nil
 }
 
 func (rbt *redBlackTree[T]) rotateLeft(pivotParent *rbtNode[T]) {
@@ -131,7 +136,6 @@ func (rbt *redBlackTree[T]) Insert(val T) {
 
 	rbt.fixInsert(newNode)
 	rbt.root.red = false
-	rbt.baseBST.root = rbt.root
 }
 
 func (rbt *redBlackTree[T]) fixInsert(n *rbtNode[T]) {
@@ -183,10 +187,6 @@ func (rbt *redBlackTree[T]) fixInsert(n *rbtNode[T]) {
 }
 
 func (rbt *redBlackTree[T]) Delete(val T) {
-	defer func() {
-		rbt.baseBST.root = rbt.root
-	}()
-
 	n := rbt.root
 
 	for n != nil {

@@ -8,8 +8,16 @@ func NewAVLTree[T cmp.Ordered]() BinarySearchTree[T] {
 
 type avlTree[T cmp.Ordered] struct {
 	root *avlNode[T]
-	baseBST[T]
 }
+
+func (t *avlTree[T]) Empty() bool                    { return t.root == nil }
+func (t *avlTree[T]) Contains(val T) bool            { return contains(t.root, val) }
+func (t *avlTree[T]) Min() T                         { return minChild(t.root) }
+func (t *avlTree[T]) Max() T                         { return maxChild(t.root) }
+func (t *avlTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
+func (t *avlTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
+func (t *avlTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
+func (t *avlTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
 
 type avlNode[T cmp.Ordered] struct {
 	val    T
@@ -103,7 +111,6 @@ func (n *avlNode[T]) rotate() *avlNode[T] {
 
 func (avl *avlTree[T]) Insert(val T) {
 	avl.root = avl.root.insert(val)
-	avl.baseBST.root = avl.root
 }
 
 func (n *avlNode[T]) insert(val T) *avlNode[T] {
@@ -123,7 +130,6 @@ func (n *avlNode[T]) insert(val T) *avlNode[T] {
 
 func (avl *avlTree[T]) Delete(val T) {
 	avl.root = avl.root.delete(val)
-	avl.baseBST.root = avl.root
 }
 
 func (n *avlNode[T]) delete(val T) *avlNode[T] {

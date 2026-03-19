@@ -8,8 +8,17 @@ func NewBinarySearchTree[T cmp.Ordered]() BinarySearchTree[T] {
 
 type binarySearchTree[T cmp.Ordered] struct {
 	root *bstNode[T]
-	baseBST[T]
 }
+
+func (t *binarySearchTree[T]) Empty() bool                    { return t.root == nil }
+func (t *binarySearchTree[T]) Contains(val T) bool            { return contains(t.root, val) }
+func (t *binarySearchTree[T]) Min() T                         { return minChild(t.root) }
+func (t *binarySearchTree[T]) Max() T                         { return maxChild(t.root) }
+func (t *binarySearchTree[T]) Height() int                    { return height(t.root) }
+func (t *binarySearchTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
+func (t *binarySearchTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
+func (t *binarySearchTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
+func (t *binarySearchTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
 
 type bstNode[T cmp.Ordered] struct {
 	val   T
@@ -39,7 +48,6 @@ func (n *bstNode[T]) getRight() baseBSTNodeInterface[T] {
 
 func (bst *binarySearchTree[T]) Insert(val T) {
 	bst.root = bst.root.insert(val)
-	bst.baseBST.root = bst.root
 }
 
 func (n *bstNode[T]) insert(val T) *bstNode[T] {
@@ -58,7 +66,6 @@ func (n *bstNode[T]) insert(val T) *bstNode[T] {
 
 func (bst *binarySearchTree[T]) Delete(val T) {
 	bst.root = bst.root.delete(val)
-	bst.baseBST.root = bst.root
 }
 
 func (n *bstNode[T]) delete(val T) *bstNode[T] {
