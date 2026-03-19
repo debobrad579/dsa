@@ -24,7 +24,7 @@ func (q *Queue[T]) Enqueue(val T) {
 
 func (q *Queue[T]) Deque() (val T) {
 	if q.Empty() {
-		return val
+		panic("queue is empty")
 	}
 
 	head := q.head
@@ -40,8 +40,9 @@ func (q *Queue[T]) Deque() (val T) {
 
 func (q *Queue[T]) Peek() (val T) {
 	if q.Empty() {
-		return val
+		panic("queue is empty")
 	}
+
 	return q.head.val
 }
 
