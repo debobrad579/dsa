@@ -1,4 +1,4 @@
-package search
+package path
 
 import (
 	"slices"
@@ -8,7 +8,7 @@ import (
 	"github.com/debobrad579/dsa/set"
 )
 
-func BreadthFirstSearch(graph graph.AdjacencyMatrix, source, target int) []int {
+func BreadthFirstSearchList(graph graph.AdjacencyList, source, target int) []int {
 	q := queue.New[int]()
 	q.Enqueue(source)
 	visited := set.New(source)
@@ -23,14 +23,14 @@ func BreadthFirstSearch(graph graph.AdjacencyMatrix, source, target int) []int {
 			break
 		}
 
-		for i, edge := range graph[curr] {
-			if edge == 0 || visited.Contains(i) {
+		for _, edge := range graph[curr] {
+			if visited.Contains(edge.To) {
 				continue
 			}
 
-			prev[i] = curr
-			visited.Add(i)
-			q.Enqueue(i)
+			prev[edge.To] = curr
+			visited.Add(edge.To)
+			q.Enqueue(edge.To)
 		}
 	}
 
