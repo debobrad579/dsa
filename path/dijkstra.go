@@ -5,53 +5,36 @@ import (
 	"slices"
 
 	"github.com/debobrad579/dsa/graph"
-	"github.com/debobrad579/dsa/set"
+	"github.com/debobrad579/dsa/queue"
 )
 
-func getLowestUnvisited(visited set.Set[int], distances []float64) int {
-	idx := -1
-	lowestDistance := math.Inf(1)
-
-	for i := range distances {
-		if visited.Contains(i) {
-			continue
-		}
-
-		if distances[i] < lowestDistance {
-			idx = i
-			lowestDistance = distances[i]
-		}
-	}
-
-	return idx
-}
-
-func DijkstraShortestPath(graph graph.AdjacencyList, source, target int) []int {
-	visited := set.New[int]()
-	prev := make([]int, len(graph))
-	distances := make([]float64, len(graph))
-
-	for i := range len(graph) {
+func DijkstraShortestPath(g graph.AdjacencyList, source, target int) []int {
+	prev := make([]int, len(g))
+	distances := make([]float64, len(g))
+	for i := range len(g) {
 		prev[i] = -1
 		distances[i] = math.Inf(1)
 	}
-
 	distances[source] = 0
 
-	for curr := getLowestUnvisited(visited, distances); curr != -1; curr = getLowestUnvisited(visited, distances) {
-		visited.Add(curr)
-		if curr == target {
+	pq := queue.NewPriorityQueue(func(a, b graph.Edge) bool { return a.Weight < b.Weight })
+	pq.Push(graph.Edge{To: source, Weight: 0})
+
+	for pq.Length() != 0 {
+		curr := pq.Pop()
+		if curr.Weight != int(distances[curr.To]) {
+			continue
+		}
+
+		if curr.To == target {
 			break
 		}
 
-		for _, edge := range graph[curr] {
-			if visited.Contains(edge.To) {
-				continue
-			}
-
-			if dist := distances[curr] + float64(edge.Weight); dist < distances[edge.To] {
-				prev[edge.To] = curr
+		for _, edge := range g[curr.To] {
+			if dist := distances[curr.To] + float64(edge.Weight); dist < distances[edge.To] {
+				prev[edge.To] = curr.To
 				distances[edge.To] = dist
+				pq.Push(graph.Edge{To: edge.To, Weight: int(dist)})
 			}
 		}
 	}
