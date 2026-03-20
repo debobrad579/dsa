@@ -3,11 +3,12 @@ package search
 import (
 	"slices"
 
+	"github.com/debobrad579/dsa/graph"
 	"github.com/debobrad579/dsa/queue"
 	"github.com/debobrad579/dsa/set"
 )
 
-func BreadthFirstSearch(graph [][]int, source, target int) []int {
+func BreadthFirstSearch(graph graph.AdjacencyMatrix, source, target int) []int {
 	q := queue.New[int]()
 	q.Enqueue(source)
 	visited := set.New(source)
