@@ -5,7 +5,7 @@ import (
 	"github.com/debobrad579/dsa/set"
 )
 
-func dfsList(graph graph.AdjacencyList, curr, target int, visited set.Set[int], path *[]int) bool {
+func dfsList(g graph.AdjacencyList, curr, dest int, visited set.Set[int], path *[]int) bool {
 	if visited.Contains(curr) {
 		return false
 	}
@@ -14,12 +14,12 @@ func dfsList(graph graph.AdjacencyList, curr, target int, visited set.Set[int], 
 
 	*path = append(*path, curr)
 
-	if curr == target {
+	if curr == dest {
 		return true
 	}
 
-	for _, edge := range graph[curr] {
-		if dfsList(graph, edge.To, target, visited, path) {
+	for _, edge := range g[curr] {
+		if dfsList(g, edge.To, dest, visited, path) {
 			return true
 		}
 	}
@@ -28,8 +28,8 @@ func dfsList(graph graph.AdjacencyList, curr, target int, visited set.Set[int], 
 	return false
 }
 
-func DepthFirstSearchList(graph graph.AdjacencyList, source, target int) []int {
-	path := make([]int, 0, len(graph))
-	dfsList(graph, source, target, set.New[int](), &path)
+func DepthFirstSearchList(g graph.AdjacencyList, source, dest int) []int {
+	path := make([]int, 0, len(g))
+	dfsList(g, source, dest, set.New[int](), &path)
 	return path
 }

@@ -5,7 +5,7 @@ import (
 	"github.com/debobrad579/dsa/set"
 )
 
-func dfsMatrix(graph graph.AdjacencyMatrix, curr, target int, visited set.Set[int], path *[]int) bool {
+func dfsMatrix(g graph.AdjacencyMatrix, curr, dest int, visited set.Set[int], path *[]int) bool {
 	if visited.Contains(curr) {
 		return false
 	}
@@ -14,12 +14,12 @@ func dfsMatrix(graph graph.AdjacencyMatrix, curr, target int, visited set.Set[in
 
 	*path = append(*path, curr)
 
-	if curr == target {
+	if curr == dest {
 		return true
 	}
 
-	for i := range len(graph[curr]) {
-		if graph[curr][i] != 0 && dfsMatrix(graph, i, target, visited, path) {
+	for i := range len(g[curr]) {
+		if g[curr][i] != 0 && dfsMatrix(g, i, dest, visited, path) {
 			return true
 		}
 	}
@@ -28,8 +28,8 @@ func dfsMatrix(graph graph.AdjacencyMatrix, curr, target int, visited set.Set[in
 	return false
 }
 
-func DepthFirstSearchMatrix(graph graph.AdjacencyMatrix, source, target int) []int {
-	path := make([]int, 0, len(graph))
-	dfsMatrix(graph, source, target, set.New[int](), &path)
+func DepthFirstSearchMatrix(g graph.AdjacencyMatrix, source, dest int) []int {
+	path := make([]int, 0, len(g))
+	dfsMatrix(g, source, dest, set.New[int](), &path)
 	return path
 }

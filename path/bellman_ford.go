@@ -3,7 +3,6 @@ package path
 import (
 	"errors"
 	"math"
-	"slices"
 
 	"github.com/debobrad579/dsa/graph"
 )
@@ -42,12 +41,5 @@ func BellmanFord(g graph.AdjacencyList, source, dest int) ([]int, error) {
 		return nil, errors.New("destination unreachable")
 	}
 
-	path := make([]int, 0)
-	for curr := dest; curr != -1; curr = prev[curr] {
-		path = append(path, curr)
-	}
-
-	slices.Reverse(path)
-
-	return path, nil
+	return reconstructPath(prev, source, dest), nil
 }

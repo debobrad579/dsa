@@ -1,29 +1,27 @@
 package path
 
 import (
-	"slices"
-
 	"github.com/debobrad579/dsa/graph"
 	"github.com/debobrad579/dsa/queue"
 	"github.com/debobrad579/dsa/set"
 )
 
-func BreadthFirstSearchList(graph graph.AdjacencyList, source, target int) []int {
+func BreadthFirstSearchList(g graph.AdjacencyList, source, dest int) []int {
 	q := queue.New[int]()
 	q.Enqueue(source)
 	visited := set.New(source)
-	prev := make([]int, len(graph))
-	for i := range len(graph) {
+	prev := make([]int, len(g))
+	for i := range len(g) {
 		prev[i] = -1
 	}
 
 	for !q.Empty() {
 		curr := q.Deque()
-		if curr == target {
+		if curr == dest {
 			break
 		}
 
-		for _, edge := range graph[curr] {
+		for _, edge := range g[curr] {
 			if visited.Contains(edge.To) {
 				continue
 			}
@@ -34,16 +32,5 @@ func BreadthFirstSearchList(graph graph.AdjacencyList, source, target int) []int
 		}
 	}
 
-	path := make([]int, 0, len(graph))
-	for curr := target; prev[curr] != -1; {
-		path = append(path, curr)
-		curr = prev[curr]
-	}
-
-	if len(path) != 0 {
-		path = append(path, source)
-		slices.Reverse(path)
-	}
-
-	return path
+	return reconstructPath(prev, source, dest)
 }

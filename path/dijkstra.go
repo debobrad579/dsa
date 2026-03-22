@@ -2,13 +2,12 @@ package path
 
 import (
 	"math"
-	"slices"
 
 	"github.com/debobrad579/dsa/graph"
 	"github.com/debobrad579/dsa/queue"
 )
 
-func DijkstraShortestPath(g graph.AdjacencyList, source, target int) []int {
+func DijkstraShortestPath(g graph.AdjacencyList, source, dest int) []int {
 	prev := make([]int, len(g))
 	distances := make([]float64, len(g))
 	for i := range len(g) {
@@ -26,7 +25,7 @@ func DijkstraShortestPath(g graph.AdjacencyList, source, target int) []int {
 			continue
 		}
 
-		if curr.To == target {
+		if curr.To == dest {
 			break
 		}
 
@@ -39,16 +38,9 @@ func DijkstraShortestPath(g graph.AdjacencyList, source, target int) []int {
 		}
 	}
 
-	if distances[target] == math.Inf(1) {
+	if distances[dest] == math.Inf(1) {
 		return []int{}
 	}
 
-	path := make([]int, 0)
-	for curr := target; curr != -1; curr = prev[curr] {
-		path = append(path, curr)
-	}
-
-	slices.Reverse(path)
-
-	return path
+	return reconstructPath(prev, source, dest)
 }
