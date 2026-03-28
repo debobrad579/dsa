@@ -1,19 +1,12 @@
 package tree_test
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/debobrad579/dsa/tree"
 	"github.com/stretchr/testify/assert"
 )
-
-func collectInts(traversal func(func(int))) []int {
-	result := []int{}
-	traversal(func(val int) {
-		result = append(result, val)
-	})
-	return result
-}
 
 func setupBST() tree.BinarySearchTree[int] {
 	bst := tree.NewBinarySearchTree[int]()
@@ -60,25 +53,25 @@ func TestBSTDelete(t *testing.T) {
 	bst := setupBST()
 	bst.Delete(6)
 	bst.Delete(4)
-	assert.Equal(t, []int{1, 2, 3, 5, 7}, collectInts(bst.InOrderTraversal))
+	assert.Equal(t, []int{1, 2, 3, 5, 7}, slices.Collect(bst.InOrderTraversal()))
 }
 
 func TestBSTPreOrderTraversal(t *testing.T) {
 	bst := setupBST()
-	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, collectInts(bst.PreOrderTraversal))
+	assert.Equal(t, []int{4, 2, 1, 3, 6, 5, 7}, slices.Collect(bst.PreOrderTraversal()))
 }
 
 func TestBSTInOrderTraversal(t *testing.T) {
 	bst := setupBST()
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(bst.InOrderTraversal))
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, slices.Collect(bst.InOrderTraversal()))
 }
 
 func TestBSTPostOrderTraversal(t *testing.T) {
 	bst := setupBST()
-	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, collectInts(bst.PostOrderTraversal))
+	assert.Equal(t, []int{1, 3, 2, 5, 7, 6, 4}, slices.Collect(bst.PostOrderTraversal()))
 }
 
 func TestBSTLevelOrderTraversal(t *testing.T) {
 	bst := setupBST()
-	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, collectInts(bst.LevelOrderTraversal))
+	assert.Equal(t, []int{4, 2, 6, 1, 3, 5, 7}, slices.Collect(bst.LevelOrderTraversal()))
 }

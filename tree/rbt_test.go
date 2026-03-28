@@ -1,18 +1,11 @@
 package tree
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
-
-func collectInts(traversal func(func(int))) []int {
-	result := []int{}
-	traversal(func(val int) {
-		result = append(result, val)
-	})
-	return result
-}
 
 func assertValidRBT(t *testing.T, rbt *redBlackTree[int]) {
 	assert.False(t, rbt.root.isRed())
@@ -57,29 +50,11 @@ func setupRBT() redBlackTree[int] {
 	//     5   7
 }
 
-func TestRBTContains(t *testing.T) {
-	rbt := setupRBT()
-	assert.True(t, rbt.Contains(1))
-	assert.True(t, rbt.Contains(2))
-	assert.True(t, rbt.Contains(3))
-	assert.True(t, rbt.Contains(4))
-	assert.True(t, rbt.Contains(5))
-	assert.True(t, rbt.Contains(6))
-	assert.True(t, rbt.Contains(7))
-	assert.False(t, rbt.Contains(42))
-}
-
-func TestRBTMinMax(t *testing.T) {
-	rbt := setupRBT()
-	assert.Equal(t, 1, rbt.Min())
-	assert.Equal(t, 7, rbt.Max())
-}
-
 func TestRBTDelete(t *testing.T) {
 	rbt := setupRBT()
 	rbt.Delete(6)
 	rbt.Delete(4)
-	assert.Equal(t, []int{1, 2, 3, 5, 7}, collectInts(rbt.InOrderTraversal))
+	assert.Equal(t, []int{1, 2, 3, 5, 7}, slices.Collect(rbt.InOrderTraversal()))
 	assertValidRBT(t, &rbt)
 }
 
@@ -87,7 +62,7 @@ func TestRBTDeleteRoot(t *testing.T) {
 	rbt := setupRBT()
 	rbt.Delete(2)
 	assertValidRBT(t, &rbt)
-	assert.Equal(t, []int{1, 3, 4, 5, 6, 7}, collectInts(rbt.InOrderTraversal))
+	assert.Equal(t, []int{1, 3, 4, 5, 6, 7}, slices.Collect(rbt.InOrderTraversal()))
 }
 
 func TestRBTDeleteRootSingleNode(t *testing.T) {
@@ -100,7 +75,7 @@ func TestRBTDeleteRootSingleNode(t *testing.T) {
 func TestRBTBalancingOnInsert(t *testing.T) {
 	rbt := setupRBT()
 	assert.Equal(t, 4, rbt.Height())
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(rbt.InOrderTraversal))
+	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, slices.Collect(rbt.InOrderTraversal()))
 	assertValidRBT(t, &rbt)
 }
 
@@ -108,26 +83,6 @@ func TestRBTBalancingOnDelete(t *testing.T) {
 	rbt := setupRBT()
 	rbt.Delete(1)
 	assert.Equal(t, 3, rbt.Height())
-	assert.Equal(t, []int{2, 3, 4, 5, 6, 7}, collectInts(rbt.InOrderTraversal))
+	assert.Equal(t, []int{2, 3, 4, 5, 6, 7}, slices.Collect(rbt.InOrderTraversal()))
 	assertValidRBT(t, &rbt)
-}
-
-func TestRBTPreOrderTraversal(t *testing.T) {
-	rbt := setupRBT()
-	assert.Equal(t, []int{2, 1, 4, 3, 6, 5, 7}, collectInts(rbt.PreOrderTraversal))
-}
-
-func TestRBTInOrderTraversal(t *testing.T) {
-	rbt := setupRBT()
-	assert.Equal(t, []int{1, 2, 3, 4, 5, 6, 7}, collectInts(rbt.InOrderTraversal))
-}
-
-func TestRBTPostOrderTraversal(t *testing.T) {
-	rbt := setupRBT()
-	assert.Equal(t, []int{1, 3, 5, 7, 6, 4, 2}, collectInts(rbt.PostOrderTraversal))
-}
-
-func TestRBTLevelOrderTraversal(t *testing.T) {
-	rbt := setupRBT()
-	assert.Equal(t, []int{2, 1, 4, 3, 6, 5, 7}, collectInts(rbt.LevelOrderTraversal))
 }

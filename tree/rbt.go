@@ -1,6 +1,9 @@
 package tree
 
-import "cmp"
+import (
+	"cmp"
+	"iter"
+)
 
 func NewRedBlackTree[T cmp.Ordered]() BinarySearchTree[T] {
 	return &redBlackTree[T]{}
@@ -10,15 +13,27 @@ type redBlackTree[T cmp.Ordered] struct {
 	root *rbtNode[T]
 }
 
-func (t *redBlackTree[T]) Empty() bool                    { return t.root == nil }
-func (t *redBlackTree[T]) Contains(val T) bool            { return contains(t.root, val) }
-func (t *redBlackTree[T]) Min() T                         { return minChild(t.root) }
-func (t *redBlackTree[T]) Max() T                         { return maxChild(t.root) }
-func (t *redBlackTree[T]) Height() int                    { return height(t.root) }
-func (t *redBlackTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
-func (t *redBlackTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
-func (t *redBlackTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
-func (t *redBlackTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
+func (t *redBlackTree[T]) Empty() bool         { return t.root == nil }
+func (t *redBlackTree[T]) Contains(val T) bool { return contains(t.root, val) }
+func (t *redBlackTree[T]) Min() T              { return minChild(t.root) }
+func (t *redBlackTree[T]) Max() T              { return maxChild(t.root) }
+func (t *redBlackTree[T]) Height() int         { return height(t.root) }
+
+func (t *redBlackTree[T]) PreOrderTraversal() iter.Seq[T] {
+	return preOrderTraversal(t.root)
+}
+
+func (t *redBlackTree[T]) InOrderTraversal() iter.Seq[T] {
+	return inOrderTraversal(t.root)
+}
+
+func (t *redBlackTree[T]) PostOrderTraversal() iter.Seq[T] {
+	return postOrderTraversal(t.root)
+}
+
+func (t *redBlackTree[T]) LevelOrderTraversal() iter.Seq[T] {
+	return levelOrderTraversal(t.root)
+}
 
 type rbtNode[T cmp.Ordered] struct {
 	val    T

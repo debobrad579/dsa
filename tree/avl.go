@@ -1,6 +1,9 @@
 package tree
 
-import "cmp"
+import (
+	"cmp"
+	"iter"
+)
 
 func NewAVLTree[T cmp.Ordered]() BinarySearchTree[T] {
 	return &avlTree[T]{}
@@ -10,15 +13,27 @@ type avlTree[T cmp.Ordered] struct {
 	root *avlNode[T]
 }
 
-func (t *avlTree[T]) Empty() bool                    { return t.root == nil }
-func (t *avlTree[T]) Contains(val T) bool            { return contains(t.root, val) }
-func (t *avlTree[T]) Min() T                         { return minChild(t.root) }
-func (t *avlTree[T]) Max() T                         { return maxChild(t.root) }
-func (avl *avlTree[T]) Height() int                  { return avl.root.nodeHeight() }
-func (t *avlTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
-func (t *avlTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
-func (t *avlTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
-func (t *avlTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
+func (t *avlTree[T]) Empty() bool         { return t.root == nil }
+func (t *avlTree[T]) Contains(val T) bool { return contains(t.root, val) }
+func (t *avlTree[T]) Min() T              { return minChild(t.root) }
+func (t *avlTree[T]) Max() T              { return maxChild(t.root) }
+func (t *avlTree[T]) Height() int         { return t.root.nodeHeight() }
+
+func (t *avlTree[T]) PreOrderTraversal() iter.Seq[T] {
+	return preOrderTraversal(t.root)
+}
+
+func (t *avlTree[T]) InOrderTraversal() iter.Seq[T] {
+	return inOrderTraversal(t.root)
+}
+
+func (t *avlTree[T]) PostOrderTraversal() iter.Seq[T] {
+	return postOrderTraversal(t.root)
+}
+
+func (t *avlTree[T]) LevelOrderTraversal() iter.Seq[T] {
+	return levelOrderTraversal(t.root)
+}
 
 type avlNode[T cmp.Ordered] struct {
 	val    T

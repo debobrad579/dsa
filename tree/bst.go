@@ -1,6 +1,9 @@
 package tree
 
-import "cmp"
+import (
+	"cmp"
+	"iter"
+)
 
 func NewBinarySearchTree[T cmp.Ordered]() BinarySearchTree[T] {
 	return &binarySearchTree[T]{}
@@ -10,15 +13,27 @@ type binarySearchTree[T cmp.Ordered] struct {
 	root *bstNode[T]
 }
 
-func (t *binarySearchTree[T]) Empty() bool                    { return t.root == nil }
-func (t *binarySearchTree[T]) Contains(val T) bool            { return contains(t.root, val) }
-func (t *binarySearchTree[T]) Min() T                         { return minChild(t.root) }
-func (t *binarySearchTree[T]) Max() T                         { return maxChild(t.root) }
-func (t *binarySearchTree[T]) Height() int                    { return height(t.root) }
-func (t *binarySearchTree[T]) PreOrderTraversal(fn func(T))   { preOrderTraversal(t.root, fn) }
-func (t *binarySearchTree[T]) InOrderTraversal(fn func(T))    { inOrderTraversal(t.root, fn) }
-func (t *binarySearchTree[T]) PostOrderTraversal(fn func(T))  { postOrderTraversal(t.root, fn) }
-func (t *binarySearchTree[T]) LevelOrderTraversal(fn func(T)) { levelOrderTraversal(t.root, fn) }
+func (t *binarySearchTree[T]) Empty() bool         { return t.root == nil }
+func (t *binarySearchTree[T]) Contains(val T) bool { return contains(t.root, val) }
+func (t *binarySearchTree[T]) Min() T              { return minChild(t.root) }
+func (t *binarySearchTree[T]) Max() T              { return maxChild(t.root) }
+func (t *binarySearchTree[T]) Height() int         { return height(t.root) }
+
+func (t *binarySearchTree[T]) PreOrderTraversal() iter.Seq[T] {
+	return preOrderTraversal(t.root)
+}
+
+func (t *binarySearchTree[T]) InOrderTraversal() iter.Seq[T] {
+	return inOrderTraversal(t.root)
+}
+
+func (t *binarySearchTree[T]) PostOrderTraversal() iter.Seq[T] {
+	return postOrderTraversal(t.root)
+}
+
+func (t *binarySearchTree[T]) LevelOrderTraversal() iter.Seq[T] {
+	return levelOrderTraversal(t.root)
+}
 
 type bstNode[T cmp.Ordered] struct {
 	val   T

@@ -2,6 +2,7 @@ package tree
 
 import (
 	"cmp"
+	"iter"
 
 	"github.com/debobrad579/dsa/queue"
 )
@@ -14,10 +15,10 @@ type BinarySearchTree[T cmp.Ordered] interface {
 	Height() int
 	Insert(T)
 	Delete(T)
-	PreOrderTraversal(func(T))
-	InOrderTraversal(func(T))
-	PostOrderTraversal(func(T))
-	LevelOrderTraversal(func(T))
+	PreOrderTraversal() iter.Seq[T]
+	InOrderTraversal() iter.Seq[T]
+	PostOrderTraversal() iter.Seq[T]
+	LevelOrderTraversal() iter.Seq[T]
 }
 
 type baseBSTNodeInterface[T cmp.Ordered] interface {
@@ -76,58 +77,116 @@ func height[T cmp.Ordered](root baseBSTNodeInterface[T]) int {
 	return max(height(root.getLeft()), height(root.getRight())) + 1
 }
 
-func preOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T], fn func(T)) {
-	if root == nil {
-		return
-	}
+func preOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		var walk func(node baseBSTNodeInterface[T]) bool
 
-	fn(root.getVal())
-	preOrderTraversal(root.getLeft(), fn)
-	preOrderTraversal(root.getRight(), fn)
-}
+		walk = func(node baseBSTNodeInterface[T]) bool {
+			if node == nil {
+				return true
+			}
 
-func inOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T], fn func(T)) {
-	if root == nil {
-		return
-	}
+			if !yield(node.getVal()) {
+				return false
+			}
 
-	inOrderTraversal(root.getLeft(), fn)
-	fn(root.getVal())
-	inOrderTraversal(root.getRight(), fn)
-}
+			if !walk(node.getLeft()) {
+				return false
+			}
 
-func postOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T], fn func(T)) {
-	if root == nil {
-		return
-	}
+			if !walk(node.getRight()) {
+				return false
+			}
 
-	postOrderTraversal(root.getLeft(), fn)
-	postOrderTraversal(root.getRight(), fn)
-	fn(root.getVal())
-}
-
-func levelOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T], fn func(T)) {
-	if root == nil {
-		return
-	}
-
-	q := queue.New[baseBSTNodeInterface[T]]()
-	q.Enqueue(root)
-
-	for !q.Empty() {
-		node := q.Deque()
-		if node == nil {
-			continue
+			return true
 		}
 
-		if node.getLeft() != nil {
-			q.Enqueue(node.getLeft())
+		walk(root)
+	}
+}
+
+func inOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		var walk func(node baseBSTNodeInterface[T]) bool
+
+		walk = func(node baseBSTNodeInterface[T]) bool {
+			if node == nil {
+				return true
+			}
+
+			if !walk(node.getLeft()) {
+				return false
+			}
+
+			if !yield(node.getVal()) {
+				return false
+			}
+
+			if !walk(node.getRight()) {
+				return false
+			}
+
+			return true
 		}
 
-		if node.getRight() != nil {
-			q.Enqueue(node.getRight())
+		walk(root)
+	}
+}
+
+func postOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		var walk func(node baseBSTNodeInterface[T]) bool
+
+		walk = func(node baseBSTNodeInterface[T]) bool {
+			if node == nil {
+				return true
+			}
+
+			if !walk(node.getLeft()) {
+				return false
+			}
+
+			if !walk(node.getRight()) {
+				return false
+			}
+
+			if !yield(node.getVal()) {
+				return false
+			}
+
+			return true
 		}
 
-		fn(node.getVal())
+		walk(root)
+	}
+}
+
+func levelOrderTraversal[T cmp.Ordered](root baseBSTNodeInterface[T]) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		if root == nil {
+			return
+		}
+
+		q := queue.New[baseBSTNodeInterface[T]]()
+		q.Enqueue(root)
+
+		for !q.Empty() {
+			node := q.Deque()
+			if node == nil {
+				continue
+			}
+
+			if !yield(node.getVal()) {
+				return
+			}
+
+			if node.getLeft() != nil {
+				q.Enqueue(node.getLeft())
+			}
+
+			if node.getRight() != nil {
+				q.Enqueue(node.getRight())
+			}
+		}
 	}
 }
